@@ -9,11 +9,12 @@
 #include <thread>
 #include <cstring>
 #include <mutex>
+#include <string_view>
 
 namespace std_fs = std::filesystem;
 
-std::string htlm_header(){
-    return(std::string("<!DOCTYPE html>\n\
+constexpr std::string_view htlm_header{
+"<!DOCTYPE html>\n\
 <HTML>\n\
         <header>\n\
             <script type=\"text/javascript\">\n\
@@ -39,8 +40,8 @@ std::string htlm_header(){
         </header>\n\
 <BODY onload=\"main()\">\n\
 <H1> Index of video preview</H1>\n\
-<pre><div id='Bubble' style=\"position: fixed; right: 40%; top: 100px; width:250px; height: 200px; visibility: hidden;\"></div></pre>\n"));
-}
+<pre><div id='Bubble' style=\"position: fixed; right: 40%; top: 100px; width:250px; height: 200px; visibility: hidden;\"></div></pre>\n"
+};
 
 std::string html_line(std::string orgpath,std::string gifname,size_t cnt){
     std::stringstream ss;
@@ -49,9 +50,7 @@ std::string html_line(std::string orgpath,std::string gifname,size_t cnt){
     return(ss.str());
 }
 
-std::string html_end(){
-    return(std::string("</BODY>\n</HTML>"));
-}
+constexpr std::string_view html_end{ "</BODY>\n</HTML>" };
 
 ssize_t doublefile_count(std::string& fname){
     size_t cnt=1; // muss mit 1 starten !
@@ -117,7 +116,7 @@ int main(int argc,char **argv){
         std::ofstream htmlout("./video_pic_catalog.html");
         if( ! htmlout.is_open() ) throw SError() << __STDINF__ << "ERROR: unable to open html catalog output file: " << strerror(errno);
 
-        htmlout << htlm_header() << "\n";
+        htmlout << htlm_header << "\n";
         htmlout << "video preview catalog from source path: " << path << "<br>\n";
 
         size_t max_threads=(std::thread::hardware_concurrency());
@@ -152,7 +151,7 @@ int main(int argc,char **argv){
 
         htmlout << "<hr>\n";
         htmlout << "reached end of catalog. done @" << time(0L) << " : found " << total_files_found << " : converted files: " << total_files_converted << " file<br>\n";
-        htmlout << html_end() << "\n";
+        htmlout << html_end << "\n";
         htmlout.close();
         std::cout << "vide_preview.cpp // reached end of catalog. done @" << time(0L) << " : found " << total_files_found << " : converted files: " << total_files_converted << " file\n";
     }catch(const std::exception& e){
